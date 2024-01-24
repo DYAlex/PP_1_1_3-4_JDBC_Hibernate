@@ -4,13 +4,6 @@ import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
 
 import java.util.List;
-/*
-Классы dao/service должны реализовывать соответствующие интерфейсы
-
-service переиспользует методы dao
-
-Все поля должны быть private
- */
 
 public class UserServiceImpl implements UserService {
     private final UserDaoJDBCImpl userDaoJDBC = new UserDaoJDBCImpl();
