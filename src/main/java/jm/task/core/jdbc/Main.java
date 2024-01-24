@@ -1,4 +1,13 @@
 package jm.task.core.jdbc;
+
+import jm.task.core.jdbc.dao.UserDao;
+import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
+import jm.task.core.jdbc.model.User;
+import jm.task.core.jdbc.service.UserService;
+import jm.task.core.jdbc.service.UserServiceImpl;
+
+import java.util.List;
+
 /*
 Необходимо ознакомиться с заготовкой и доработать приложение,
 которое взаимодействует с базой оперируя пользователем ( класс User )
@@ -25,7 +34,7 @@ Byte age
 3. Все поля должны быть private
 4. service переиспользует методы dao
 5. Обработка всех исключений, связанных с работой с базой данных должна находиться в dao
-6. Класс Util должен содержать логику настройки соединения с базой данных
++. Класс Util должен содержать логику настройки соединения с базой данных
 
 
 Необходимые операции:
@@ -44,12 +53,49 @@ Byte age
 
 1. Создание таблицы User(ов)
 2. Добавление 4 User(ов) в таблицу с данными на свой выбор. После каждого добавления должен быть вывод в консоль ( User с именем – name добавлен в базу данных )
-3. Получение всех User из базы и вывод в консоль ( должен быть переопределен toString в классе User)
+3. Получение всех User из базы и вывод в консоль (+ должен быть переопределен toString в классе User)
 4. Очистка таблицы User(ов)
 5. Удаление таблицы
  */
 public class Main {
     public static void main(String[] args) {
         // реализуйте алгоритм здесь
+//        UserDao userDao = new UserDaoJDBCImpl();
+        UserService userService = new UserServiceImpl();
+
+        userService.createUsersTable();
+
+        userService.saveUser("Name1", "LastName1", (byte) 20);
+        userService.saveUser("Name2", "LastName2", (byte) 25);
+        userService.saveUser("Name3", "LastName3", (byte) 31);
+        userService.saveUser("Name4", "LastName4", (byte) 38);
+
+        userService.removeUserById(1);
+//        userService.removeUserById(1);
+
+//        userService.getAllUsers();
+
+        List<User> users = userService.getAllUsers();
+        users.stream().forEach(user -> System.out.println(user));
+//        users.stream().forEach(user -> System.out.printf("User has id %d. User's name is %s %s. User is %d years old\n", user.getId(), user.getName(), user.getLastName(), user.getAge()));
+
+        userService.cleanUsersTable();
+        userService.dropUsersTable();
+
+//        userDao.createUsersTable();
+//
+//        userDao.saveUser("Name1", "LastName1", (byte) 20);
+//        userDao.saveUser("Name2", "LastName2", (byte) 25);
+//        userDao.saveUser("Name3", "LastName3", (byte) 31);
+//        userDao.saveUser("Name4", "LastName4", (byte) 38);
+//
+//        userDao.removeUserById(1);
+//        userDao.removeUserById(1);
+//
+//        List<User> users = userDao.getAllUsers();
+//        users.stream().forEach(user -> System.out.printf("User has id %d. User's name is %s %s. User is %d years old\n", user.getId(), user.getName(), user.getLastName(), user.getAge()));
+//
+//        userDao.cleanUsersTable();
+//        userDao.dropUsersTable();
     }
 }
