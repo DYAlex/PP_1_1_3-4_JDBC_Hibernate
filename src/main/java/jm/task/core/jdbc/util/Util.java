@@ -9,8 +9,9 @@ public class Util {
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "23102310";
 
+    private static Connection connection;
+
     public static Connection getConnection() {
-        Connection connection = null;
         try {
             connection = DriverManager.getConnection(
                     DB_URL,
@@ -19,5 +20,13 @@ public class Util {
             System.out.println("Connection ERROR: " + e.getMessage());
         }
         return connection;
+    }
+
+    public static void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            System.err.println("ERROR closing connection: " + e.getMessage());
+        }
     }
 }
