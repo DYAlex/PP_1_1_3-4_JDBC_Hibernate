@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
+    private final Connection connection = Util.getConnection();
     public UserDaoJDBCImpl() {
 
     }
@@ -25,7 +26,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 "age TINYINT(3) NULL, " +
                 "PRIMARY KEY (id), " +
                 "UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE)";
-        try (Connection connection = Util.getConnection(); Statement stmt = connection.createStatement()) {
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(createString);
         } catch (SQLException e) {
             System.out.println("Create table ERROR: " + e.getMessage());
@@ -38,7 +39,7 @@ public class UserDaoJDBCImpl implements UserDao {
             return;
         }
         String deleteString = "DROP TABLE users";
-        try (Connection connection = Util.getConnection(); Statement stmt = connection.createStatement()) {
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(deleteString);
         } catch (SQLException e) {
             System.out.println("Delete table ERROR: " + e.getMessage());
@@ -52,7 +53,7 @@ public class UserDaoJDBCImpl implements UserDao {
         }
 
         String createString = "INSERT INTO users(name, last_name, age) VALUES(?, ?, ?)";
-        try (Connection connection = Util.getConnection(); PreparedStatement pstmt = connection.prepareStatement(createString)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(createString)) {
             pstmt.setString(1, name);
             pstmt.setString(2, lastName);
             pstmt.setByte(3, age);
@@ -70,7 +71,7 @@ public class UserDaoJDBCImpl implements UserDao {
         }
 
         String removeString = "DELETE FROM users where id=?";
-        try (Connection connection = Util.getConnection(); PreparedStatement pstmt = connection.prepareStatement(removeString)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(removeString)) {
             pstmt.setLong(1, id);
             int success = pstmt.executeUpdate();
             if (success == 0) {
@@ -89,7 +90,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
         List<User> allUsers = new ArrayList<>();
         String getAllUsersString = "SELECT * FROM users";
-        try (Connection connection = Util.getConnection(); Statement stmt = connection.createStatement()) {
+        try (Statement stmt = connection.createStatement()) {
             boolean success = stmt.execute(getAllUsersString);
             if (success) {
                 try (ResultSet rs = stmt.getResultSet()) {
@@ -119,7 +120,7 @@ public class UserDaoJDBCImpl implements UserDao {
         }
 
         String cleanUsersTableString = "TRUNCATE TABLE users";
-        try (Connection connection = Util.getConnection(); Statement stmt = connection.createStatement()) {
+        try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(cleanUsersTableString);
         } catch (SQLException e) {
             System.out.println("Delete table ERROR: " + e.getMessage());
@@ -127,10 +128,11 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     private boolean tableExists() {
-        try(Connection connection = Util.getConnection()) {
-            DatabaseMetaData md = connection.getMetaData();
+        DatabaseMetaData md;
+        try {
+            md = connection.getMetaData();
             ResultSet rs = md.getTables(null, null, "users", new String[]{"TABLE"});
-            return rs.next();
+                return rs.next();
         } catch (SQLException e) {
             System.err.println("ERROR while checking if table exists");
         }
