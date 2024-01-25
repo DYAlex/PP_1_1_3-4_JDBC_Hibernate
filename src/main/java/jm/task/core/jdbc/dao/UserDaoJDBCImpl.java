@@ -9,6 +9,7 @@ import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
     private final Connection connection = Util.getConnection();
+
     public UserDaoJDBCImpl() {
 
     }
@@ -132,7 +133,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try {
             md = connection.getMetaData();
             ResultSet rs = md.getTables(null, null, "users", new String[]{"TABLE"});
-                return rs.next();
+            return rs.next();
         } catch (SQLException e) {
             System.err.println("ERROR while checking if table exists");
         }
